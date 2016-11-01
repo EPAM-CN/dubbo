@@ -22,7 +22,12 @@
 
     <dubbo:application name="demo-provider" owner="programmer" organization="dubbox"/>
 
-    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+    <!-- There're 4 types of registry, multicast,zookeeper,redis and dubbo -->
+    <!--change the registry settings for demo -->
+    <dubbo:registry address="multicast://224.5.6.7:1234"/>
+    <!--<dubbo:registry address="zookeeper://127.0.0.1:2181"/>-->
+    <!--<dubbo:registry address="redis://10.0.245.111:6379" username="root" password="abc123"/>-->
+    <!--<dubbo:registry address="dubbo://127.0.0.1:9090"/>-->
 
     <!--uncomment this if you want to test dubbo's monitor-->
     <!--<dubbo:monitor protocol="registry"/>-->
