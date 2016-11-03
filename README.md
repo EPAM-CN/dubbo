@@ -12,30 +12,11 @@ For more details, please refer to [wiki](https://github.com/alibaba/dubbo/wiki) 
 
 ## Quick Start
 
-
-Export service:
-
-```xml
-<bean id="barService" class="com.foo.BarServiceImpl" />
-<dubbo:service interface="com.foo.BarService" ref="barService" />
-```
-
-Refer to service:
-
-```xml
-<dubbo:reference id="barService" interface="com.foo.BarService" />
-	
-<bean id="barAction" class="com.foo.BarAction">
-    <property name="barService" ref="barService" />
-</bean>
-```
-
 ## Source Building
 
 
 0. Install the git and maven command line:
-
-    ```sh
+```sh
 yum install git
 or: apt-get install git
 cd ~
@@ -46,156 +27,179 @@ append: export PATH=$PATH:~/apache-maven-3.2.2/bin
 source .bash_profile
 ```
 
+
 0. Checkout the dubbo source code:
 
-    ```sh
+```sh
 cd ~
-git clone https://github.com/alibaba/dubbo.git dubbo
-git checkout master
+git clone https://github.com/EPAM-CN/dubbo.git
 ```
 
-0. Import the dubbo source code to eclipse project:
+0. Import the dubbo source code to intellj/eclipse project:
 
-    ```sh
-cd ~/dubbo
-mvn eclipse:eclipse
-```
-
-    Then configure the project in eclipse by following the steps below:
-    * Eclipse -> Menu -> File -> Import -> Exsiting Projects to Workspace -> Browse -> Finish
-    * Context Menu -> Run As -> Java Application:
-        * dubbo-demo-provider/src/test/java/com.alibaba.dubbo.demo.provider.DemoProvider
-        * dubbo-demo-consumer/src/test/java/com.alibaba.dubbo.demo.consumer.DemoConsumer
-        * dubbo-monitor-simple/src/test/java/com.alibaba.dubbo.monitor.simple.SimpleMonitor
-        * dubbo-registry-simple/src/test/java/com.alibaba.dubbo.registry.simple.SimpleRegistry
+```sh
+    Then demo code struct in the project is below:
+    * Start DEMO:
+        * ${basedir}/dubbo-demo/dubbo-demo-provider/src/test/java/com/alibaba/dubbo/demo/provider/DemoProvider.java
+        * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/test/java/com/alibaba/dubbo/demo/consumer/DemoConsumer.java
+        * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/java/com/alibaba/dubbo/monitor/simple/SimpleMonitor.java
+        * ${basedir}/dubbo-simple/dubbo-registry-simple/src/test/java/com/alibaba/dubbo/registry/simple/SimpleRegistry.java
     * Edit Config:
-        * dubbo-demo-provider/src/test/resources/dubbo.properties
-        * dubbo-demo-consumer/src/test/resources/dubbo.properties
-        * dubbo-monitor-simple/src/test/resources/dubbo.properties
-        * dubbo-registry-simple/src/test/resources/dubbo.properties
+        * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+        * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+        * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+        * ${basedir}/dubbo-simple/dubbo-registry-simple/src/test/resources/dubbo.properties
+```
 
 0. Build the dubbo binary package:
 
-    ```sh
+```sh
 cd ~/dubbo
 mvn clean install -Dmaven.test.skip
-cd dubbo/target
-ls
+```
+## Demo Scenario1: multicast registry
+0. change registry setting in config files:
+
+```sh
+* ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+* ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+<dubbo:registry address="multicast://224.5.6.7:1234"/>
+${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+dubbo.registry.address=multicast://224.5.6.7:1234
+```
+0. Run the demo provider with intellj/eclipse:
+
+```sh
+DemoProvider.java run main method
 ```
 
-0. Install the demo provider:
+0. Run the demo consumer with intellj/eclipse:
 
-    ```sh
-cd ~/dubbo/dubbo-demo-provider/target
-tar zxvf dubbo-demo-provider-2.4.0-assembly.tar.gz
-cd dubbo-demo-provider-2.4.0/bin
-./start.sh
+```sh
+ DemoConsumer.java run main method
+ ```
+
+0. Run the demo simple monitor with intellj/eclipse:
+
+```sh
+SimpleMonitor.java run main method
+chrome open http://127.0.0.1:8080
 ```
 
-0. Install the demo consumer:
+## Demo Scenario2: dubbo registry
+0. Start the simple registry with intellj/eclipse:
 
-    ```sh
-cd ~/dubbo/dubbo-demo-consumer/target
-tar zxvf dubbo-demo-consumer-2.4.0-assembly.tar.gz
-cd dubbo-demo-consumer-2.4.0/bin
-./start.sh
-cd ../logs
-tail -f stdout.log
+```sh
+SimpleRegistry.java run main method
 ```
 
-0. Install the simple monitor:
+0. change registry setting in config files:
 
-    ```sh
-cd ~/dubbo/dubbo-simple-monitor/target
-tar zxvf dubbo-simple-monitor-2.4.0-assembly.tar.gz
-cd dubbo-simple-monitor-2.4.0/bin
-./start.sh
-http://127.0.0.1:8080
+```sh
+* ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+* ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+<dubbo:registry address="dubbo://127.0.0.1:9090"/>
+${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+dubbo.registry.address=dubbo://127.0.0.1:9090
+```
+0. restart  Demo:
+```sh
+ DemoProvider.java run main method
+ DemoConsumer.java run main method
+ SimpleMonitor.java run main method
+ chrome open http://127.0.0.1:8080
 ```
 
-0. Install the simple registry:
+## Demo Scenario3: zookeeper registry
+0. Install and run zookeeper in localhost:
 
-    ```sh
-cd ~/dubbo/dubbo-simple-registry/target
-tar zxvf dubbo-simple-registry-2.4.0-assembly.tar.gz
-cd dubbo-simple-registry-2.4.0/bin
-./start.sh
-cd ~/dubbo/dubbo-demo-provider/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=dubbo://127.0.0.1:9090
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-demo-consumer/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=dubbo://127.0.0.1:9090
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-simple-monitor/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=dubbo://127.0.0.1:9090
-cd ../bin
-./restart.sh
-```
-
-0. Install the zookeeper registry:
-
-    ```sh
+Linux:
+```sh
 cd ~
 wget http://www.apache.org/dist//zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 tar zxvf zookeeper-3.3.3.tar.gz
 cd zookeeper-3.3.3/conf
 cp zoo_sample.cfg zoo.cfg
 vi zoo.cfg
-- edit: dataDir=/home/xxx/data
-cd ../bin
-./zkServer.sh start
-cd ~/dubbo/dubbo-demo-provider/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=zookeeper://127.0.0.1:2181
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-demo-consumer/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=zookeeper://127.0.0.1:2181
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-simple-monitor/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=zookeeper://127.0.0.1:2181
-cd ../bin
-./restart.sh
+- edit: dataDir=/home/zookeeper/data
 ```
 
-0. Install the redis registry:
+Windows:
+```sh
+cd ~
+Chrome download http://www.apache.org/dist//zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
+unzip zookeeper-3.3.3.tar.gz
+cd zookeeper-3.3.3/conf
+copy zoo_sample.cfg zoo.cfg
+open zoo.cfg
+- edit: dataDir=c:\zookeeper\data
+```
+0. change registry setting in config files:
 
-    ```sh
+```sh
+* ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+* ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+<dubbo:registry address="zookeeper://127.0.0.1:2181"/>
+${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+dubbo.registry.address=zookeeper://127.0.0.1:2181
+```
+0. restart  Demo:
+```sh
+ DemoProvider.java run main method
+ DemoConsumer.java run main method
+ SimpleMonitor.java run main method
+ chrome open http://127.0.0.1:8080
+```
+
+## Demo Scenario4: redis registry
+0. Install and run redis in localhost:
+
+Linux:
+```sh
 cd ~
 wget http://download.redis.io/releases/redis-3.2.5.tar.gz
 tar xzf redis-3.2.5.tar.gz
 cd redis-3.2.5
 make
+cd 
+vi redis.conf
+--edit: find '# requirepass foobared' change to  'requirepass abc123'
 nohup ./src/redis-server redis.conf &
-cd ~/dubbo/dubbo-demo-provider/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=redis://127.0.0.1:6379
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-demo-consumer/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=redis://127.0.0.1:6379
-cd ../bin
-./restart.sh
-cd ~/dubbo/dubbo-simple-monitor/conf
-vi dubbo.properties
-- edit: dubbo.registry.adddress=redis://127.0.0.1:6379
-cd ../bin
-./restart.sh
 ```
 
-0. Install the admin console:
+Windows:
+```sh
+Chrome download https://github.com/MSOpenTech/redis/releases/download/win-3.2.100/Redis-x64-3.2.100.zip
+unzip Redis-x64-3.2.100.zip
+cd Redis-x64-3.2.100
+open redis.windows.conf
+--edit: find '# requirepass foobared' change to  'requirepass abc123'
+cd Redis-x64-3.2.100
+redis-server.exe redis.windows.conf
+```
+0. change registry setting in config files:
 
-    ```sh
-    cd ~/dubbo/dubbo-admin
-    mvn jetty:run -Ddubbo.registry.address=zookeeper://127.0.0.1:2181
-    http://root:root@127.0.0.1:8080
+```sh
+* ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+* ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+<dubbo:registry address="redis://127.0.0.1:6379"/>
+${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+dubbo.registry.address=redis://127.0.0.1:6379
+```
+0. restart  Demo:
+```sh
+ DemoProvider.java run main method
+ DemoConsumer.java run main method
+ SimpleMonitor.java run main method
+ chrome open http://127.0.0.1:8080
+```
+
+
+## Install the admin console:
+
+```sh
+--Start zookeeper
+cd ~/dubbo/dubbo-admin
+mvn jetty:run -Ddubbo.registry.address=zookeeper://127.0.0.1:2181
+http://root:root@127.0.0.1:8080
 ```
