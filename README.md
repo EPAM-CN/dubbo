@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/alibaba/dubbo.svg?branch=master)](https://travis-ci.org/alibaba/dubbo) [![Gitter](https://badges.gitter.im/alibaba/dubbo.svg)](https://gitter.im/alibaba/dubbo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Dubbo is a distributed, high performance RPC framework which empowers applications with service import/export capabilities.
 
@@ -8,7 +7,7 @@ It contains three key parts, which include:
 * **Clustering**: a remote procedure call abstraction with load-balancing/failover/clustering capabilities.
 * **Registration**: a service directory framework for service registration and service event publish/subscription
 
-For more details, please refer to [wiki](https://github.com/alibaba/dubbo/wiki) or [dubbo.io](http://dubbo.io).
+For more details, please refer to [wiki](https://github.com/EPAM-CN/dubbo/wiki) or [dubbo.io](http://dubbo.io).
 
 ## Quick Start
 
@@ -65,11 +64,13 @@ mvn clean install -Dmaven.test.skip
 0. change registry setting in config files:
 
 ```sh
+Find these two xml files below:
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-edit config '<dubbo:registry address="multicast://224.5.6.7:1234"/>'
+In these two files, edit config '<dubbo:registry address="multicast://224.5.6.7:1234"/>';
+Find this xml file below:
 * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-edit config 'dubbo.registry.address=multicast://224.5.6.7:1234'
+In this file, edit config 'dubbo.registry.address=multicast://224.5.6.7:1234'
 ```
 0. Run the demo provider with intellj/eclipse:
 
@@ -100,11 +101,13 @@ SimpleRegistry.java run main method
 0. change registry setting in config files:
 
 ```sh
+Find these two xml files below:
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-edit config '<dubbo:registry address="dubbo://127.0.0.1:9090"/>'
+In these two files, edit config '<dubbo:registry address="dubbo://127.0.0.1:9090"/>';
+Find this xml file below:
 * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-edit config 'dubbo.registry.address=dubbo://127.0.0.1:9090'
+In this file, edit config 'dubbo.registry.address=dubbo://127.0.0.1:9090'
 ```
 0. restart  Demo:
 ```sh
@@ -132,6 +135,7 @@ cd ../bin
 
 Windows:
 ```sh
+## First, we should download and install ZooKeeper. Then, we start the ZooKeeper, see below for the details:
 cd ~
 Chrome download http://www.apache.org/dist//zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 unzip zookeeper-3.3.3.tar.gz
@@ -140,16 +144,19 @@ copy zoo_sample.cfg zoo.cfg
 open zoo.cfg
 - edit: dataDir=c:\zookeeper\data
 cd ../bin
+## start ZooKeeper in Cmd window:
 zkServer.cmd start
 ```
 0. change registry setting in config files:
 
 ```sh
+Find these two xml files below:
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-edit config '<dubbo:registry address="zookeeper://127.0.0.1:2181"/>'
+In these two files, dit config '<dubbo:registry address="zookeeper://127.0.0.1:2181"/>';
+Find this xml file below:
 * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-edit config 'dubbo.registry.address=zookeeper://127.0.0.1:2181'
+In this file, edit config 'dubbo.registry.address=zookeeper://127.0.0.1:2181'
 ```
 0. restart  Demo:
 ```sh
@@ -181,18 +188,24 @@ Chrome download https://github.com/MSOpenTech/redis/releases/download/win-3.2.10
 unzip Redis-x64-3.2.100.zip
 cd Redis-x64-3.2.100
 open redis.windows.conf
+## Give the redis-server NoSQL database a password:
 --edit: find '# requirepass foobared' change to  'requirepass abc123'
 cd Redis-x64-3.2.100
+## run redis-server in command line like below, so we can start redis server:
 redis-server.exe redis.windows.conf
+## When the server is on, the Cmd window will show:  The server is now ready to accept connections on port 6379
 ```
 0. change registry setting in config files:
 
 ```sh
+Find these two xml files below:
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-edit config '<dubbo:registry address="redis://127.0.0.1:6379"/>'
+In these two files, edit config '<dubbo:registry address="redis://127.0.0.1:6379" username="root" password="abc123"/>';
+Find this xml file below:
 * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-edit config 'dubbo.registry.address=redis://127.0.0.1:6379'
+In this file, edit config 'dubbo.registry.address=redis://127.0.0.1:6379',
+add 'dubbo.registry.username=abc dubbo.registry.password=abc123'
 ```
 0. restart  Demo:
 ```sh
@@ -201,13 +214,6 @@ edit config 'dubbo.registry.address=redis://127.0.0.1:6379'
  SimpleMonitor.java run main method
  chrome open http://127.0.0.1:8080
 ```
+## After the whole process is done, turn off the redis-server width 'Ctrl + c' in the Cmd window
 
 
-## Install the admin console:
-
-```sh
---Start zookeeper
-cd ~/dubbo/dubbo-admin
-mvn jetty:run -Ddubbo.registry.address=zookeeper://127.0.0.1:2181
-http://root:root@127.0.0.1:8080
-```
