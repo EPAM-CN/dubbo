@@ -46,9 +46,13 @@ git clone https://github.com/EPAM-CN/dubbo.git
         * ${basedir}/dubbo-simple/dubbo-registry-simple/src/test/java/com/alibaba/dubbo/registry/simple/SimpleRegistry.java
     * Edit Config:
         * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
+        * This file is the config file for dubbo provider
         * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
+        * This file is the config file for dubbo consumer
         * ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+        * This file is the config file for dubbo monitor
         * ${basedir}/dubbo-simple/dubbo-registry-simple/src/test/resources/dubbo.properties
+        * This file is the config file for dubbo registry
 ```
 
 0. Build the dubbo binary package:
@@ -63,9 +67,9 @@ mvn clean install -Dmaven.test.skip
 ```sh
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-<dubbo:registry address="multicast://224.5.6.7:1234"/>
-${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-dubbo.registry.address=multicast://224.5.6.7:1234
+edit config '<dubbo:registry address="multicast://224.5.6.7:1234"/>'
+* ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+edit config 'dubbo.registry.address=multicast://224.5.6.7:1234'
 ```
 0. Run the demo provider with intellj/eclipse:
 
@@ -98,9 +102,9 @@ SimpleRegistry.java run main method
 ```sh
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-<dubbo:registry address="dubbo://127.0.0.1:9090"/>
-${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-dubbo.registry.address=dubbo://127.0.0.1:9090
+edit config '<dubbo:registry address="dubbo://127.0.0.1:9090"/>'
+* ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+edit config 'dubbo.registry.address=dubbo://127.0.0.1:9090'
 ```
 0. restart  Demo:
 ```sh
@@ -122,6 +126,8 @@ cd zookeeper-3.3.3/conf
 cp zoo_sample.cfg zoo.cfg
 vi zoo.cfg
 - edit: dataDir=/home/zookeeper/data
+cd ../bin
+./zkServer.sh start
 ```
 
 Windows:
@@ -133,15 +139,17 @@ cd zookeeper-3.3.3/conf
 copy zoo_sample.cfg zoo.cfg
 open zoo.cfg
 - edit: dataDir=c:\zookeeper\data
+cd ../bin
+zkServer.cmd start
 ```
 0. change registry setting in config files:
 
 ```sh
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-<dubbo:registry address="zookeeper://127.0.0.1:2181"/>
-${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-dubbo.registry.address=zookeeper://127.0.0.1:2181
+edit config '<dubbo:registry address="zookeeper://127.0.0.1:2181"/>'
+* ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+edit config 'dubbo.registry.address=zookeeper://127.0.0.1:2181'
 ```
 0. restart  Demo:
 ```sh
@@ -182,9 +190,9 @@ redis-server.exe redis.windows.conf
 ```sh
 * ${basedir}/dubbo-demo/dubbo-demo-provider/src/main/resources/META-INF/spring/dubbo-demo-provider.xml
 * ${basedir}/dubbo-demo/dubbo-demo-consumer/src/main/resources/META-INF/spring/dubbo-demo-consumer.xml
-<dubbo:registry address="redis://127.0.0.1:6379"/>
-${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
-dubbo.registry.address=redis://127.0.0.1:6379
+edit config '<dubbo:registry address="redis://127.0.0.1:6379"/>'
+* ${basedir}/dubbo-simple/dubbo-monitor-simple/src/test/resources/dubbo.properties
+edit config 'dubbo.registry.address=redis://127.0.0.1:6379'
 ```
 0. restart  Demo:
 ```sh
